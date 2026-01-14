@@ -1,11 +1,9 @@
 package org.vision.imageservice.dto;
 
-import java.io.Serializable;
+public class ImageMetaResponseDto {
 
-public class ImageMetaResponseDto implements Serializable {
-
-    private final boolean success;
-    private final String message;
+    private boolean success;
+    private String message;
 
     public ImageMetaResponseDto(boolean success, String message) {
         this.success = success;

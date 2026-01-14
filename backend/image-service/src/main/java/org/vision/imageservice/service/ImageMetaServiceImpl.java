@@ -3,7 +3,9 @@ package org.vision.imageservice.service;
 import org.springframework.stereotype.Service;
 import org.vision.imageservice.dto.ImageMetaRequestDto;
 import org.vision.imageservice.dto.ImageMetaResponseDto;
+import org.vision.imageservice.dto.ImageMetaDetailsResponseDto;
 import org.vision.imageservice.entity.ImageMeta;
+import org.vision.imageservice.exception.ImageNotFoundException;
 import org.vision.imageservice.repository.ImageMetaRepository;
 
 import java.time.LocalDateTime;
@@ -33,6 +35,25 @@ public class ImageMetaServiceImpl implements ImageMetaService {
         return new ImageMetaResponseDto(
                 true,
                 "Image metadata created successfully"
+        );
+    }
+
+    @Override
+    public ImageMetaDetailsResponseDto getImageById(Long id) {
+
+        ImageMeta imageMeta = imageMetaRepository.findById(id)
+                .orElseThrow(() ->
+                        new ImageNotFoundException("Image not found with id: " + id)
+                );
+
+        return new ImageMetaDetailsResponseDto(
+                true,
+                "Image found",
+                imageMeta.getId(),
+                imageMeta.getImageName(),
+                imageMeta.getImagePath(),
+                imageMeta.getCreatedAt(),
+                imageMeta.getUpdatedAt()
         );
     }
 }

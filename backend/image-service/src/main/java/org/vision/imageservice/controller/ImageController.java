@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.vision.imageservice.dto.ImageMetaDetailsResponseDto;
 import org.vision.imageservice.dto.ImageMetaRequestDto;
 import org.vision.imageservice.dto.ImageMetaResponseDto;
 import org.vision.imageservice.service.ImageMetaService;
@@ -32,4 +33,14 @@ public class ImageController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ImageMetaDetailsResponseDto> getImageById(@PathVariable Long id) {
+
+        ImageMetaDetailsResponseDto response =
+                imageMetaService.getImageById(id);
+
+        return ResponseEntity.ok(response);
+    }
+
 }
