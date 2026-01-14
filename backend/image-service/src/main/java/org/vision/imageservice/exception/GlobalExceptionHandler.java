@@ -4,10 +4,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.vision.imageservice.dto.ErrorResponse;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+    @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException e){
         String errorMessage = e.getBindingResult()
                 .getFieldErrors()
@@ -17,6 +19,15 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
+                .body(errorResponse);
+    }
+
+    @ExceptionHandler({ImageNotFoundException.class})
+    public ResponseEntity<ErrorResponse> handleImageNotFoundException(ImageNotFoundException e){
+        String errorMessage = e.getMessage();
+        ErrorResponse errorResponse = new ErrorResponse(errorMessage, false);
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
                 .body(errorResponse);
     }
 }
