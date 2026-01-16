@@ -42,5 +42,12 @@ public class ImageController {
 
         return ResponseEntity.ok(response);
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteImageById(@PathVariable Long id) {
+
+        imageMetaService.deleteImageById(id);
+
+        return ResponseEntity.noContent().build(); // 204 NO CONTENT
+    }
 
 }

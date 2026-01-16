@@ -56,4 +56,14 @@ public class ImageMetaServiceImpl implements ImageMetaService {
                 imageMeta.getUpdatedAt()
         );
     }
+    @Override
+    public void deleteImageById(Long id) {
+
+        ImageMeta imageMeta = imageMetaRepository.findById(id)
+                .orElseThrow(() ->
+                        new ImageNotFoundException("Image not found with id: " + id)
+                );
+
+        imageMetaRepository.delete(imageMeta);
+    }
 }
