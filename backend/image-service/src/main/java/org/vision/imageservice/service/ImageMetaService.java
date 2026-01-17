@@ -9,4 +9,5 @@ public interface ImageMetaService {
     ImageMetaResponseDto createImageMetadata(ImageMetaRequestDto imageMetaRequestDto);
     ImageMetaDetailsResponseDto getImageById(Long id);
     void deleteImageById(Long id);
+    ImageMetaDetailsResponseDto updateImageById(Long id,ImageMetaRequestDto imageMetaRequestDto);
 }

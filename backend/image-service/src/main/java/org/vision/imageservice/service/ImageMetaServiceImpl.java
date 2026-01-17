@@ -66,4 +66,31 @@ public class ImageMetaServiceImpl implements ImageMetaService {
 
         imageMetaRepository.delete(imageMeta);
     }
+    @Override
+    public ImageMetaDetailsResponseDto updateImageById(
+            Long id,
+            ImageMetaRequestDto imageMetaRequestDto
+    ) {
+
+        ImageMeta imageMeta = imageMetaRepository.findById(id)
+                .orElseThrow(() ->
+                        new ImageNotFoundException("Image not found with id: " + id)
+                );
+
+        imageMeta.setImageName(imageMetaRequestDto.getImageName());
+        imageMeta.setImagePath(imageMetaRequestDto.getImagePath());
+        imageMeta.setUpdatedAt(LocalDateTime.now());
+
+        ImageMeta updatedImage = imageMetaRepository.save(imageMeta);
+
+        return new ImageMetaDetailsResponseDto(
+                true,
+                "Image updated successfully",
+                updatedImage.getId(),
+                updatedImage.getImageName(),
+                updatedImage.getImagePath(),
+                updatedImage.getCreatedAt(),
+                updatedImage.getUpdatedAt()
+        );
+    }
 }

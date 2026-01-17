@@ -14,7 +14,6 @@ import org.vision.imageservice.service.ImageMetaService;
 public class ImageController {
 
     private final ImageMetaService imageMetaService;
-
     public ImageController(ImageMetaService imageMetaService) {
         this.imageMetaService = imageMetaService;
     }
@@ -23,6 +22,7 @@ public class ImageController {
     public String health() {
         return "Image Service is UP";
     }
+
 
     @PostMapping
     public ResponseEntity<ImageMetaResponseDto> createImage(
@@ -36,18 +36,26 @@ public class ImageController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ImageMetaDetailsResponseDto> getImageById(@PathVariable Long id) {
-
-        ImageMetaDetailsResponseDto response =
-                imageMetaService.getImageById(id);
-
+        ImageMetaDetailsResponseDto response = imageMetaService.getImageById(id);
         return ResponseEntity.ok(response);
     }
+
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteImageById(@PathVariable Long id) {
-
         imageMetaService.deleteImageById(id);
+        return ResponseEntity.noContent().build();
+    }
 
-        return ResponseEntity.noContent().build(); // 204 NO CONTENT
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ImageMetaDetailsResponseDto> updateImageById(
+            @PathVariable Long id,
+            @Valid @RequestBody
+            ImageMetaRequestDto imageMetaRequestDto) {
+        ImageMetaDetailsResponseDto response = imageMetaService.updateImageById(id, imageMetaRequestDto);
+        return ResponseEntity.ok(response);
     }
 
 }
