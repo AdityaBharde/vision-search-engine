@@ -32,12 +32,10 @@ public class MLInferenceService {
 
     public MLResponseDto generateAndStoreEmbedding(MultipartFile image) {
         try {
-
             MLResponseDto mlResponse = mlServiceClient.getEmbedding(
                     image.getBytes(),
                     image.getOriginalFilename()
             );
-
 
             ImageMeta imageMeta = new ImageMeta();
             imageMeta.setImageName(image.getOriginalFilename());
@@ -49,6 +47,13 @@ public class MLInferenceService {
 
             imageMeta = imageMetaRepository.save(imageMeta);
 
+            String embeddingJson = objectMapper
+                    .writeValueAsString(mlResponse.getEmbedding());
+
+            ImageEmbedding imageEmbedding =
+                    new ImageEmbedding(imageMeta, embeddingJson);
+
+            imageEmbeddingRepository.save(imageEmbedding);
 
             return mlResponse;
 

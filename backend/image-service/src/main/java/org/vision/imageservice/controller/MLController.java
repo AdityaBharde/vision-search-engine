@@ -24,7 +24,8 @@ public class MLController {
             return ResponseEntity.badRequest().build();
         }
 
-        MLResponseDto response = mlInferenceService.generateAndStoreEmbedding(image);
+        MLResponseDto response =
+                mlInferenceService.generateAndStoreEmbedding(image);
         return ResponseEntity.ok(response);
     }
 }
