@@ -33,44 +33,21 @@ public class ImageSearchService {
     public List<ImageSearchResultDto> search(MultipartFile image, int topK) {
 
         try {
-            // 1. Generate query embedding
+
             MLResponseDto queryEmbedding = mlServiceClient.getEmbedding(
                     image.getBytes(),
                     image.getOriginalFilename()
             );
 
-            List<Double> queryVector = queryEmbedding.getEmbedding();
+            String vectorString = queryEmbedding.getEmbedding().toString();
 
-            // 2. Load stored embeddings
-            List<ImageEmbedding> embeddings = imageEmbeddingRepository.findAll();
+            List<ImageEmbedding> results = imageEmbeddingRepository.findNearestNeighbors(vectorString, topK);
 
-            // 3. Compute similarity
-            return embeddings.stream()
-                    .map(e -> {
-                        try {
-                            List<Double> storedVector = objectMapper.readValue(
-                                    e.getEmbeddingJson(),
-                                    new TypeReference<List<Double>>() {}
-                            );
-
-                            double score = CosineSimilarityUtil.cosineSimilarity(
-                                    queryVector,
-                                    storedVector
-                            );
-
-                            return new ImageSearchResultDto(
-                                    e.getImageMeta().getId(),
-                                    e.getImageMeta().getImageName(),
-                                    score
-                            );
-
-                        } catch (Exception ex) {
-                            throw new RuntimeException(ex);
-                        }
-                    })
-                    .sorted(Comparator.comparingDouble(ImageSearchResultDto::getSimilarity).reversed())
-                    .limit(topK)
-                    .collect(Collectors.toList());
+            return results.stream().map(e -> new ImageSearchResultDto(
+                    e.getImageMeta().getId(),
+                    e.getImageMeta().getImageName(),
+                    0.0 // Score calculation is now done by DB
+            )).collect(Collectors.toList());
 
         } catch (Exception e) {
             throw new RuntimeException("Search failed", e);

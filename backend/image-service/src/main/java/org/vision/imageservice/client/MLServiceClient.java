@@ -7,13 +7,15 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.vision.imageservice.dto.MLResponseDto;
+import org.springframework.beans.factory.annotation.Value;
 
 @Component
 public class MLServiceClient {
 
     private final RestTemplate restTemplate;
 
-    private static final String ML_EMBED_URL = "http://127.0.0.1:8001/embed";
+    @Value("${ml.service.url}")
+    private String ML_EMBED_URL ;
 
     public MLServiceClient(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
